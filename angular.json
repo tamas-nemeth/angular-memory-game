@@ -2,7 +2,130 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "projects": {},
+  "projects": {
+    "memory": {
+      "root": "apps/memory/",
+      "sourceRoot": "apps/memory/src",
+      "projectType": "application",
+      "prefix": "supergames",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/memory",
+            "index": "apps/memory/src/index.html",
+            "main": "apps/memory/src/main.ts",
+            "polyfills": "apps/memory/src/polyfills.ts",
+            "tsConfig": "apps/memory/tsconfig.app.json",
+            "assets": [
+              "apps/memory/src/favicon.ico",
+              "apps/memory/src/assets"
+            ],
+            "styles": [
+              "apps/memory/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/memory/src/environments/environment.ts",
+                  "with": "apps/memory/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "memory:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "memory:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "memory:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/memory/tsconfig.app.json",
+              "apps/memory/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/memory/jest.config.js",
+            "tsConfig": "apps/memory/tsconfig.spec.json",
+            "setupFile": "apps/memory/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "memory-e2e": {
+      "root": "apps/memory-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/memory-e2e/protractor.conf.js",
+            "devServerTarget": "memory:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "memory:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/memory-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "warnings": {
       "typescriptMismatch": false,
@@ -10,5 +133,6 @@
     },
     "defaultCollection": "@nrwl/schematics",
     "packageManager": "yarn"
-  }
+  },
+  "defaultProject": "memory"
 }
