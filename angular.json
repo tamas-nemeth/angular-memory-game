@@ -27,6 +27,7 @@
               "apps/memory/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "apps/memory/src/styles.scss"
             ],
             "scripts": []
@@ -121,6 +122,62 @@
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        }
+      }
+    },
+    "memory-game": {
+      "root": "libs/memory-game",
+      "sourceRoot": "libs/memory-game/src",
+      "projectType": "library",
+      "prefix": "supergames",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/memory-game/tsconfig.lib.json",
+              "libs/memory-game/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/memory-game/jest.config.js",
+            "tsConfig": "libs/memory-game/tsconfig.spec.json",
+            "setupFile": "libs/memory-game/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "memory-home": {
+      "root": "libs/memory-home",
+      "sourceRoot": "libs/memory-home/src",
+      "projectType": "library",
+      "prefix": "supergames",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/memory-home/tsconfig.lib.json",
+              "libs/memory-home/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/memory-home/jest.config.js",
+            "tsConfig": "libs/memory-home/tsconfig.spec.json",
+            "setupFile": "libs/memory-home/src/test-setup.ts"
           }
         }
       }

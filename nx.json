@@ -13,6 +13,12 @@
     },
     "memory-e2e": {
       "tags": []
+    },
+    "memory-game": {
+      "tags": []
+    },
+    "memory-home": {
+      "tags": []
     }
   }
 }

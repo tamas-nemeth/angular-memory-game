@@ -16,6 +16,12 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@supergames/memory-game": [
+        "libs/memory-game/src/index.ts"
+      ],
+      "@supergames/memory-home": [
+        "libs/memory-home/src/index.ts"
+      ]
     }
   },
   "exclude": [

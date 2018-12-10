@@ -1,0 +1,7 @@
+:host {
+  height: 100%;
+  display: grid;
+  grid-auto-flow: row;
+  // router-outlet is an extra element
+  grid-template-rows: repeat(2, min-content) 1fr;
+}

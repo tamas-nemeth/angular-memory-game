@@ -5,5 +5,9 @@
     "types": []
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"],
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"
+    , "../../libs/memory-game/src/index.ts"
+
+    , "../../libs/memory-home/src/index.ts"
+]
 }
