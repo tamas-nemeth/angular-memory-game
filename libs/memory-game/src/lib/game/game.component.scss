@@ -3,6 +3,7 @@
   display: grid;
   grid-auto-flow: column;
   grid-gap: 24px;
+  padding: 24px;
   grid-template-rows: repeat(4, 1fr);
 }
 
@@ -12,4 +13,11 @@
 
 .cards--12 {
   grid-template-columns: repeat(4, 1fr);
+}
+
+.game-info {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: max-content 1fr min-content;
+  justify-items: center;
 }

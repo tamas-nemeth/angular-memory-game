@@ -21,6 +21,9 @@
       ],
       "@supergames/memory-home": [
         "libs/memory-home/src/index.ts"
+      ],
+      "@supergames/array-utils": [
+        "libs/array-utils/index.ts"
       ]
     }
   },

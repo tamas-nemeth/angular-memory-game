@@ -1,0 +1,10 @@
+.card {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+
+  &__image {
+    max-width: 100%;
+    height: auto;
+  }
+}
