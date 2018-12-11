@@ -1,9 +1,9 @@
 <section class="game-info">
   <span>Tries: {{tries$ | async}}</span>
   <span>Best:</span>
-  <button mat-flat-button color="accent">Restart</button>
+  <button mat-flat-button color="accent" (click)="startGame()">Restart</button>
 </section>
 
-<section class="cards" [ngClass]="'cards--'+numberOfCards" (click)="cardClick$.next($event)">
-  <supergames-card *ngFor="let card of cards" [card]="card"></supergames-card>
+<section class="cards" [ngClass]="'cards--'+numberOfCards">
+  <supergames-card *ngFor="let card of cards; index as index" [card]="card" [index]="index" (turn)="cardTurn$.next($event)" [revealedCards]="revealedCards$ | async" [matchedCards]="matchedCards$ | async"></supergames-card>
 </section>

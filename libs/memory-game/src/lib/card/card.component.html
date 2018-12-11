@@ -1,1 +1,1 @@
-<mat-card (click)="onClick($event)" class="card"><img [src]="card.imageUrl" class="card__image"></mat-card>
+<mat-card (click)="onClick()" class="card" [class.card--turned-up]="isTurnedUp" [class.card--matched]="hasBeenMatched"><img mat-card-image [src]="card.imageUrl" class="card__image"></mat-card>

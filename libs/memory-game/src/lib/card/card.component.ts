@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
 import { Card } from '../card.model';
+import { CardTurn } from '../card-turn.model';
 
 @Component({
   selector: 'supergames-card',
@@ -9,21 +11,25 @@ import { Card } from '../card.model';
 export class CardComponent implements OnInit {
   @Input() card: Card;
   @Input() index: number;
-  @Input() visibleCardIndexes: [number, number];
-  @Input() hiddenCardIndexes: number[];
-  get isUnfolded() {
-    return this.visibleCardIndexes.includes(this.index);
+  @Input() revealedCards: CardTurn[] = [];
+  @Input() matchedCards: Card[];
+  @Output() turn = new EventEmitter<CardTurn>();
+
+  get isTurnedUp() {
+    return !!this.revealedCards && this.revealedCards.some(revealedCard => revealedCard.index === this.index);
   }
-  get isHidden() {
-    return this.hiddenCardIndexes.includes(this.index);
+
+  get hasBeenMatched() {
+    return !!this.matchedCards && this.matchedCards.some(matchedCard => this.card.imageUrl === matchedCard.imageUrl);
   }
-  click$ = new EventEmitter<MouseEvent>();
 
   constructor() { }
 
   ngOnInit() {}
 
-  onClick(event: MouseEvent) {
-    this.click$.emit(event);
+  onClick() {
+    if (!this.isTurnedUp) {
+      this.turn.emit({card: this.card, index: this.index});
+    }
   }
 }

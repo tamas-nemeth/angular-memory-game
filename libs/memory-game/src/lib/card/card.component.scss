@@ -2,9 +2,24 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  $block: &;
 
   &__image {
     max-width: 100%;
     height: auto;
+    opacity: 0;
+  }
+
+  &--turned-up {
+    #{$block}__image {
+      opacity: 1;
+    }
+  }
+
+  &--matched {
+    #{$block}__image {
+      opacity: 1;
+    }
+    background-color: rgba(0,0,0,.87);
   }
 }

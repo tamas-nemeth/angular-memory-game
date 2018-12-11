@@ -3,6 +3,8 @@ import { Subject } from 'rxjs';
 import { bufferCount, filter, map, mapTo, scan } from 'rxjs/operators';
 
 import { shuffleArray } from '@supergames/array-utils';
+import { Card } from '../card.model';
+import { CardTurn } from '../card-turn.model';
 
 @Component({
   selector: 'supergames-game',
@@ -24,29 +26,37 @@ export class GameComponent implements OnInit {
     'webpack'
   ];
   imageUrls = this.technologies.map(technology => `assets/cards/${technology}.png`);
+  cards: Card[];
 
   numberOfCards = 20;
 
-  get cards() {
-    const oneSetOfCards = this.imageUrls.slice(0, this.numberOfCards / 2).map(imageUrl => ({imageUrl}));
-    return shuffleArray(oneSetOfCards.concat(oneSetOfCards));
-  }
+  cardTurn$ = new Subject<CardTurn>();
 
-  cardClick$ = new Subject<MouseEvent>();
-  cardUnfold$ = this.cardClick$.pipe(
-    map(event => event.target as HTMLElement),
-    filter(target => target.classList.contains('mat-card')),
-    map(target => +(target).textContent),
+  revealedCards$ = this.cardTurn$.pipe(
+    // TODO: maybe a combination of windowCount and something else would also work
+    scan((cardTurns: CardTurn[], currentTurn: CardTurn) => cardTurns.length < 2 ? cardTurns.concat(currentTurn) : [currentTurn], [])
   );
-  unfoldedCards$ = this.cardUnfold$.pipe(
-    bufferCount(2)
+
+  matchedCards$ = this.revealedCards$.pipe(
+    filter(([firstTurn, secondTurn]) => !!secondTurn && firstTurn.card.imageUrl === secondTurn.card.imageUrl),
+    map(([firstTurn]) => firstTurn.card),
+    scan((matchingCards: Card[], currentMatchingCard: Card) => matchingCards.concat(currentMatchingCard), [])
   );
-  tries$ = this.unfoldedCards$.pipe(
+
+  tries$ = this.revealedCards$.pipe(
+    bufferCount(2),
     mapTo(1),
     scan((tries, currentTry) => tries + currentTry, 0)
   );
 
+  startGame() {
+    const oneSetOfCards = this.imageUrls.slice(0, this.numberOfCards / 2).map(imageUrl => ({imageUrl}));
+    this.cards = shuffleArray(oneSetOfCards.concat(oneSetOfCards));
+  }
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.startGame();
+  }
 }
