@@ -5,6 +5,7 @@ import { bufferCount, filter, map, mapTo, scan } from 'rxjs/operators';
 import { shuffleArray } from '@supergames/array-utils';
 import { Card } from '../card.model';
 import { CardTurn } from '../card-turn.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'supergames-game',
@@ -28,7 +29,8 @@ export class GameComponent implements OnInit {
   imageUrls = this.technologies.map(technology => `assets/cards/${technology}.png`);
   cards: Card[];
 
-  numberOfCards = 20;
+  deckSizeOptions = [20, 12];
+  deckSizeControl = new FormControl(this.deckSizeOptions[0]);
 
   cardTurn$ = new Subject<CardTurn>();
 
@@ -50,7 +52,7 @@ export class GameComponent implements OnInit {
   );
 
   startGame() {
-    const oneSetOfCards = this.imageUrls.slice(0, this.numberOfCards / 2).map(imageUrl => ({imageUrl}));
+    const oneSetOfCards = this.imageUrls.slice(0, this.deckSizeControl.value / 2).map(imageUrl => ({imageUrl}));
     this.cards = shuffleArray(oneSetOfCards.concat(oneSetOfCards));
   }
 
