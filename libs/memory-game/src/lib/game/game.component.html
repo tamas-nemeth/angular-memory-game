@@ -1,8 +1,7 @@
 <section class="game-info">
   <span>Tries: {{tries$ | async}}</span>
-  <span>Best:</span>
   <div>
-    <mat-form-field>
+    <mat-form-field class="game-info__deck-size-select">
       <mat-select placeholder="Deck size" [formControl]="deckSizeControl">
         <mat-option *ngFor="let deckSizeOption of deckSizeOptions" [value]="deckSizeOption">
           {{deckSizeOption}}
@@ -11,7 +10,6 @@
     </mat-form-field>
     <button mat-flat-button color="accent" (click)="startGame()">Restart</button>
   </div>
-
 </section>
 
 <section class="cards" [ngClass]="'cards--'+numberOfCards">

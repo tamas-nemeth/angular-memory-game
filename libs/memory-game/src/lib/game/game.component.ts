@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { bufferCount, filter, map, mapTo, scan } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+
+import { BehaviorSubject, Subject } from 'rxjs';
+import { bufferCount, filter, map, mapTo, mergeAll, scan, window } from 'rxjs/operators';
 
 import { shuffleArray } from '@supergames/array-utils';
+
 import { Card } from '../card.model';
 import { CardTurn } from '../card-turn.model';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'supergames-game',
@@ -28,15 +30,18 @@ export class GameComponent implements OnInit {
   ];
   imageUrls = this.technologies.map(technology => `assets/cards/${technology}.png`);
   cards: Card[];
+  deckSizeOfCurrentGame: number;
 
   deckSizeOptions = [20, 12];
   deckSizeControl = new FormControl(this.deckSizeOptions[0]);
 
   cardTurn$ = new Subject<CardTurn>();
+  resetGame$ = new BehaviorSubject<any>(undefined);
 
   revealedCards$ = this.cardTurn$.pipe(
+    scan((cardTurns: CardTurn[], currentTurn: CardTurn) => cardTurns.length < 2 ? cardTurns.concat(currentTurn) : [currentTurn], []),
     // TODO: maybe a combination of windowCount and something else would also work
-    scan((cardTurns: CardTurn[], currentTurn: CardTurn) => cardTurns.length < 2 ? cardTurns.concat(currentTurn) : [currentTurn], [])
+    // also need to window the stream with resetGame$ so that tries$ restarts from zero when new game is started
   );
 
   matchedCards$ = this.revealedCards$.pipe(
@@ -52,13 +57,20 @@ export class GameComponent implements OnInit {
   );
 
   startGame() {
-    const oneSetOfCards = this.imageUrls.slice(0, this.deckSizeControl.value / 2).map(imageUrl => ({imageUrl}));
+    this.deckSizeOfCurrentGame = this.deckSizeControl.value;
+    const oneSetOfCards = this.imageUrls.slice(0, this.deckSizeOfCurrentGame / 2).map(imageUrl => ({imageUrl}));
     this.cards = shuffleArray(oneSetOfCards.concat(oneSetOfCards));
+    this.resetGame$.next(undefined);
   }
 
   constructor() {}
 
   ngOnInit() {
     this.startGame();
+    this.matchedCards$.pipe(
+      filter(matchedCards => matchedCards.length === this.deckSizeOfCurrentGame / 2)
+    ).subscribe(() => {
+      alert('Congratulations! You won the game.');
+    });
   }
 }

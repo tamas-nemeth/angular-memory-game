@@ -4,9 +4,6 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule,
-  MatCardModule,
-  MatFormFieldModule,
-  MatSelectModule,
   MatToolbarModule
 } from '@angular/material';
 
@@ -27,12 +24,8 @@ import { AppComponent } from './app.component';
       {initialNavigation: 'enabled'}),
     BrowserAnimationsModule,
     MatToolbarModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatCardModule
+    MatButtonModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
