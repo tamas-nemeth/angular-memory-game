@@ -30,6 +30,7 @@ import { CardTurn } from '../card-turn.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameComponent implements OnInit {
+  highScoreStorageKey = 'highScores';
   deckSizeOptions = [20, 18, 16, 12];
   deckSizeControl = new FormControl(this.deckSizeOptions[0], {updateOn: 'submit'});
   deckFormGroup = new FormGroup({
@@ -90,9 +91,9 @@ export class GameComponent implements OnInit {
     distinctUntilChanged((previousScores, currentScores) => previousScores[this.deckSizeControl.value] === currentScores[this.deckSizeControl.value]),
     tap(highScores => {
       this.snackbar.open(`Congratulations! Your new record is ${highScores[this.deckSizeControl.value]}.`, `I'm cool!`);
-      this.storageService.set('highScores', highScores);
+      this.storageService.set(this.highScoreStorageKey, {...this.storageService.get(this.highScoreStorageKey), ...highScores});
     }),
-    startWith(this.storageService.get('highScores') || {})
+    startWith(this.storageService.get(this.highScoreStorageKey) || {}),
   );
 
   constructor(private imageService: ImageService, private storageService: StorageService, private snackbar: MatSnackBar) {}

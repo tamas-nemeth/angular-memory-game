@@ -23,13 +23,16 @@ export class CardComponent implements OnInit {
     return !!this.matchedCards && this.matchedCards.some(matchedCard => this.card.imageUrl === matchedCard.imageUrl);
   }
 
+  get isOnlyCardTurnedUp() {
+    return this.revealedCards.length === 1 && this.isTurnedUp;
+  }
+
   constructor() { }
 
   ngOnInit() {}
 
   onClick() {
-    // TODO: is not the first one selected
-    if (!this.hasBeenMatched) {
+    if (!this.hasBeenMatched && !this.isOnlyCardTurnedUp) {
       this.turn.emit({card: this.card, index: this.index});
     }
   }
