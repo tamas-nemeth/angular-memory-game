@@ -1,7 +1,7 @@
 <section class="game-info">
   <div class="game-info__scores">
     <span [matBadge]="tries$ | async" matBadgeOverlap="false">Tries</span>
-    <span *ngIf="highScore$ | async as highScore" [matBadge]="highScore" matBadgeOverlap="false" matBadgeColor="accent">Best</span>
+    <span *ngIf="(highScore$ | async)[deckSizeControl.value] as highScore" [matBadge]="highScore" matBadgeOverlap="false" matBadgeColor="accent">Best</span>
   </div>
   <form (ngSubmit)="startGame()" [formGroup]="deckFormGroup">
     <mat-form-field class="game-info__deck-size-select">

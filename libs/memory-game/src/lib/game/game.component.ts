@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { BehaviorSubject, Subject } from 'rxjs';
 import {
   bufferCount,
+  distinctUntilChanged,
   filter,
   map,
   mapTo,
@@ -12,6 +13,7 @@ import {
   scan,
   startWith,
   switchMap,
+  tap,
   window
 } from 'rxjs/operators';
 
@@ -74,16 +76,25 @@ export class GameComponent implements OnInit {
   );
 
   highScore$ = this.tries$.pipe(
-    // TODO: highscore for deck size
     sample(this.gameOver$),
-    scan((lowestTries, currentTries) => Math.min(lowestTries, currentTries))
+    scan(
+      (previousScores: {[deckSize: number]: number}, currentTries: number) => {
+        const deckSize = this.deckSizeControl.value;
+        return {
+          ...previousScores,
+          [deckSize]: Math.min(previousScores[deckSize] || Number.MAX_SAFE_INTEGER, currentTries)
+        }
+      },
+      {}
+    ),
+    distinctUntilChanged((previousScores, currentScores) => previousScores[this.deckSizeControl.value] === currentScores[this.deckSizeControl.value]),
+    tap(highScores => {
+      this.snackbar.open(`Congratulations! Your new record is ${highScores[this.deckSizeControl.value]}.`, `I'm cool!`);
+    }),
+    startWith({})
   );
 
-  constructor(private imageService: ImageService, private snackbar: MatSnackBar) {
-    this.gameOver$.subscribe(() => {
-      this.snackbar.open('Congratulations! You won the game.', `I'm cool`);
-    });
-  }
+  constructor(private imageService: ImageService, private snackbar: MatSnackBar) {}
 
   ngOnInit() {}
 
