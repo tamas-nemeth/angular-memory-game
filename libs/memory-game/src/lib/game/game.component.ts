@@ -17,7 +17,7 @@ import {
   window
 } from 'rxjs/operators';
 
-import { ImageService } from '@supergames/services';
+import { ImageService, StorageService } from '@supergames/services';
 import { shuffleArray } from '@supergames/array-utils';
 
 import { Card } from '../card.model';
@@ -90,11 +90,12 @@ export class GameComponent implements OnInit {
     distinctUntilChanged((previousScores, currentScores) => previousScores[this.deckSizeControl.value] === currentScores[this.deckSizeControl.value]),
     tap(highScores => {
       this.snackbar.open(`Congratulations! Your new record is ${highScores[this.deckSizeControl.value]}.`, `I'm cool!`);
+      this.storageService.set('highScores', highScores);
     }),
-    startWith({})
+    startWith(this.storageService.get('highScores') || {})
   );
 
-  constructor(private imageService: ImageService, private snackbar: MatSnackBar) {}
+  constructor(private imageService: ImageService, private storageService: StorageService, private snackbar: MatSnackBar) {}
 
   ngOnInit() {}
 
