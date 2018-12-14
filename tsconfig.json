@@ -24,6 +24,9 @@
       ],
       "@supergames/array-utils": [
         "libs/array-utils/index.ts"
+      ],
+      "@supergames/services": [
+        "libs/services/index.ts"
       ]
     }
   },

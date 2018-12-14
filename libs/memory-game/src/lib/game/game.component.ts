@@ -1,9 +1,21 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import { bufferCount, filter, map, mapTo, mergeAll, scan, window } from 'rxjs/operators';
+import {
+  bufferCount,
+  filter,
+  map,
+  mapTo,
+  sample,
+  scan,
+  startWith,
+  switchMap,
+  window
+} from 'rxjs/operators';
 
+import { ImageService } from '@supergames/services';
 import { shuffleArray } from '@supergames/array-utils';
 
 import { Card } from '../card.model';
@@ -16,61 +28,71 @@ import { CardTurn } from '../card-turn.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameComponent implements OnInit {
-  technologies = [
-    'angular',
-    'd3',
-    'jenkins',
-    'postcss',
-    'react',
-    'redux',
-    'sass',
-    'supercharge',
-    'ts',
-    'webpack'
-  ];
-  imageUrls = this.technologies.map(technology => `assets/cards/${technology}.png`);
-  cards: Card[];
-  deckSizeOfCurrentGame: number;
-
-  deckSizeOptions = [20, 12];
-  deckSizeControl = new FormControl(this.deckSizeOptions[0]);
+  deckSizeOptions = [20, 18, 16, 12];
+  deckSizeControl = new FormControl(this.deckSizeOptions[0], {updateOn: 'submit'});
+  deckFormGroup = new FormGroup({
+    'deckSize': this.deckSizeControl
+  });
+  cards$ = new BehaviorSubject<Card[]>(this.generateCards(this.deckSizeControl.value));
 
   cardTurn$ = new Subject<CardTurn>();
-  resetGame$ = new BehaviorSubject<any>(undefined);
 
   revealedCards$ = this.cardTurn$.pipe(
-    scan((cardTurns: CardTurn[], currentTurn: CardTurn) => cardTurns.length < 2 ? cardTurns.concat(currentTurn) : [currentTurn], []),
-    // TODO: maybe a combination of windowCount and something else would also work
-    // also need to window the stream with resetGame$ so that tries$ restarts from zero when new game is started
+    window(this.cards$),
+    switchMap(
+      card$ => card$.pipe(
+        scan((cardTurns: CardTurn[], currentTurn: CardTurn) => cardTurns.length < 2 ? cardTurns.concat(currentTurn) : [currentTurn], []),
+        startWith([])
+      )
+    )
   );
 
   matchedCards$ = this.revealedCards$.pipe(
-    filter(([firstTurn, secondTurn]) => !!secondTurn && firstTurn.card.imageUrl === secondTurn.card.imageUrl),
-    map(([firstTurn]) => firstTurn.card),
-    scan((matchingCards: Card[], currentMatchingCard: Card) => matchingCards.concat(currentMatchingCard), [])
+    window(this.cards$),
+    switchMap(
+      matchedCards$ => matchedCards$.pipe(
+        filter(([firstTurn, secondTurn]) => !!secondTurn && firstTurn.card.imageUrl === secondTurn.card.imageUrl),
+        map(([firstTurn]) => firstTurn.card),
+        scan((matchingCards: Card[], currentMatchingCard: Card) => matchingCards.concat(currentMatchingCard), []),
+        startWith([])
+      )
+    )
+  );
+
+  gameOver$ = this.matchedCards$.pipe(
+    filter(matchedCards => matchedCards.length === this.deckSizeControl.value / 2)
   );
 
   tries$ = this.revealedCards$.pipe(
-    bufferCount(2),
-    mapTo(1),
-    scan((tries, currentTry) => tries + currentTry, 0)
+    window(this.cards$),
+    switchMap(turn$ => turn$.pipe(
+      bufferCount(2),
+      mapTo(1),
+      scan((tries, currentTry) => tries + currentTry, 0),
+      startWith(0)
+    ))
   );
 
-  startGame() {
-    this.deckSizeOfCurrentGame = this.deckSizeControl.value;
-    const oneSetOfCards = this.imageUrls.slice(0, this.deckSizeOfCurrentGame / 2).map(imageUrl => ({imageUrl}));
-    this.cards = shuffleArray(oneSetOfCards.concat(oneSetOfCards));
-    this.resetGame$.next(undefined);
+  highScore$ = this.tries$.pipe(
+    // TODO: highscore for deck size
+    sample(this.gameOver$),
+    scan((lowestTries, currentTries) => Math.min(lowestTries, currentTries))
+  );
+
+  constructor(private imageService: ImageService, private snackbar: MatSnackBar) {
+    this.gameOver$.subscribe(() => {
+      this.snackbar.open('Congratulations! You won the game.', `I'm cool`);
+    });
   }
 
-  constructor() {}
+  ngOnInit() {}
 
-  ngOnInit() {
-    this.startGame();
-    this.matchedCards$.pipe(
-      filter(matchedCards => matchedCards.length === this.deckSizeOfCurrentGame / 2)
-    ).subscribe(() => {
-      alert('Congratulations! You won the game.');
-    });
+  startGame() {
+    this.cards$.next(this.generateCards(this.deckSizeControl.value));
+  }
+
+  generateCards(numberOfCards: number) {
+    const oneSetOfCards = this.imageService.getImages(numberOfCards / 2).map(imageUrl => ({imageUrl}));
+    return shuffleArray(oneSetOfCards.concat(oneSetOfCards));
   }
 }

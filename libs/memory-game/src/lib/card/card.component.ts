@@ -28,7 +28,8 @@ export class CardComponent implements OnInit {
   ngOnInit() {}
 
   onClick() {
-    if (!this.isTurnedUp) {
+    // TODO: is not the first one selected
+    if (!this.hasBeenMatched) {
       this.turn.emit({card: this.card, index: this.index});
     }
   }

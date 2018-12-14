@@ -5,3 +5,9 @@
   // router-outlet is an extra element
   grid-template-rows: repeat(2, min-content) 1fr;
 }
+
+.toolbar {
+  &__button {
+    text-transform: uppercase;
+  }
+}
