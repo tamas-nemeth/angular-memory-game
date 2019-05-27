@@ -17,14 +17,14 @@ import {
   window
 } from 'rxjs/operators';
 
-import { ImageService, StorageService } from '@supergames/services';
-import { shuffleArray } from '@supergames/array-utils';
+import { ImageService, StorageService } from '@nggames/services';
+import { shuffleArray } from '@nggames/array-utils';
 
 import { Card } from '../card.model';
 import { CardTurn } from '../card-turn.model';
 
 @Component({
-  selector: 'supergames-game',
+  selector: 'nggames-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

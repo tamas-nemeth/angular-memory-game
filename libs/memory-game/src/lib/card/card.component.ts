@@ -4,7 +4,7 @@ import { Card } from '../card.model';
 import { CardTurn } from '../card-turn.model';
 
 @Component({
-  selector: 'supergames-card',
+  selector: 'nggames-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })

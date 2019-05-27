@@ -1,37 +1,23 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "importHelpers": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
     "baseUrl": ".",
     "paths": {
-      "@supergames/memory-game": [
-        "libs/memory-game/src/index.ts"
-      ],
-      "@supergames/memory-home": [
-        "libs/memory-home/src/index.ts"
-      ],
-      "@supergames/array-utils": [
-        "libs/array-utils/index.ts"
-      ],
-      "@supergames/services": [
-        "libs/services/index.ts"
-      ]
-    }
+      "@nggames/memory-game": ["libs/memory-game/src/index.ts"],
+      "@nggames/memory-home": ["libs/memory-home/src/index.ts"],
+      "@nggames/array-utils": ["libs/array-utils/index.ts"],
+      "@nggames/services": ["libs/services/index.ts"]
+    },
+    "module": "es2015"
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

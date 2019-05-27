@@ -14,6 +14,10 @@ import {
 
 import { GameComponent } from './game/game.component';
 import { CardComponent } from './card/card.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { MEMORYGAME_FEATURE_KEY, initialState as memoryGameInitialState, memoryGameReducer } from './+state/memory-game.reducer';
+import { MemoryGameEffects } from './+state/memory-game.effects';
 
 @NgModule({
   imports: [
@@ -27,7 +31,9 @@ import { CardComponent } from './card/card.component';
     MatBadgeModule,
     RouterModule.forChild([
       { path: '', pathMatch: 'full', component: GameComponent }
-    ])
+    ]),
+    StoreModule.forFeature(MEMORYGAME_FEATURE_KEY, memoryGameReducer, { initialState: memoryGameInitialState }),
+    EffectsModule.forFeature([MemoryGameEffects])
   ],
   declarations: [GameComponent, CardComponent]
 })

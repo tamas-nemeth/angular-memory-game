@@ -16,5 +16,5 @@
 </section>
 
 <section class="cards" [ngClass]="'cards--'+deckSizeControl.value">
-  <supergames-card *ngFor="let card of cards$ | async; index as index" [card]="card" [index]="index" (turn)="cardTurn$.next($event)" [revealedCards]="revealedCards$ | async" [matchedCards]="matchedCards$ | async"></supergames-card>
+  <nggames-card *ngFor="let card of cards$ | async; index as index" [card]="card" [index]="index" (turn)="cardTurn$.next($event)" [revealedCards]="revealedCards$ | async" [matchedCards]="matchedCards$ | async"></nggames-card>
 </section>

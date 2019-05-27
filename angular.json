@@ -7,7 +7,7 @@
       "root": "apps/memory/",
       "sourceRoot": "apps/memory/src",
       "projectType": "application",
-      "prefix": "supergames",
+      "prefix": "nggames",
       "schematics": {
         "@schematics/angular:component": {
           "styleext": "scss"
@@ -22,10 +22,7 @@
             "main": "apps/memory/src/main.ts",
             "polyfills": "apps/memory/src/polyfills.ts",
             "tsConfig": "apps/memory/tsconfig.app.json",
-            "assets": [
-              "apps/memory/src/favicon.ico",
-              "apps/memory/src/assets"
-            ],
+            "assets": ["apps/memory/src/favicon.ico", "apps/memory/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "apps/memory/src/styles.scss"
@@ -83,9 +80,7 @@
               "apps/memory/tsconfig.app.json",
               "apps/memory/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -119,9 +114,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/memory-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -130,7 +123,7 @@
       "root": "libs/memory-game",
       "sourceRoot": "libs/memory-game/src",
       "projectType": "library",
-      "prefix": "supergames",
+      "prefix": "nggames",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -139,9 +132,7 @@
               "libs/memory-game/tsconfig.lib.json",
               "libs/memory-game/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -158,7 +149,7 @@
       "root": "libs/memory-home",
       "sourceRoot": "libs/memory-home/src",
       "projectType": "library",
-      "prefix": "supergames",
+      "prefix": "nggames",
       "architect": {
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -167,9 +158,7 @@
               "libs/memory-home/tsconfig.lib.json",
               "libs/memory-home/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -191,5 +180,18 @@
     "defaultCollection": "@nrwl/schematics",
     "packageManager": "yarn"
   },
-  "defaultProject": "memory"
+  "defaultProject": "memory",
+  "schematics": {
+    "@nrwl/schematics:library": {
+      "unitTestRunner": "karma",
+      "framework": "angular"
+    },
+    "@nrwl/schematics:application": {
+      "unitTestRunner": "karma",
+      "e2eTestRunner": "protractor"
+    },
+    "@nrwl/schematics:node-application": {
+      "framework": "express"
+    }
+  }
 }

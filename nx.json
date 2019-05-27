@@ -1,5 +1,5 @@
 {
-  "npmScope": "supergames",
+  "npmScope": "nggames",
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",

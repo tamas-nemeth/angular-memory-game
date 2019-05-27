@@ -6,6 +6,6 @@ export class AppPage {
   }
 
   getParagraphText() {
-    return element(by.css('supergames-root h1')).getText();
+    return element(by.css('nggames-root h1')).getText();
   }
 }
